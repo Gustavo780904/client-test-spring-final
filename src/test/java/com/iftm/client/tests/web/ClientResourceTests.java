@@ -147,16 +147,18 @@ public class ClientResourceTests {
 	}
 
 	@Test
-	public void insertShouldReturnCreatedStatusAndReturnObjectCreatedWhenValidData() throws Exception {
+	public void insertShouldReturnCreatedStatusWhenIsValidData() throws Exception {
 
 		String jsonBody = objectMapper.writeValueAsString(newClientDTO);
-		Double expectedIncome = newClientDTO.getIncome();
-		String expectedCpf = newClientDTO.getCpf();
-		ResultActions result = mockMvc.perform(post("/clients", clientDTO).content(jsonBody).contentType(MediaType.APPLICATION_JSON).accept(MediaType.APPLICATION_JSON));
+		
+		ResultActions result = 
+				mockMvc.perform(post("/clients", clientDTO)
+						.content(jsonBody)
+						.contentType(MediaType.APPLICATION_JSON)
+						.accept(MediaType.APPLICATION_JSON));
 
 		result.andExpect(status().isCreated());
-		result.andExpect(jsonPath("$.income").value(expectedIncome));
-		result.andExpect(jsonPath("$.cpf").value(expectedCpf));
+
 	}
 
 	@Test
@@ -169,8 +171,10 @@ public class ClientResourceTests {
 
 	@Test
 	public void deleteShouldReturnNotFoundStatusWhenIdExists() throws Exception {
+		
 		ResultActions result = 
-				mockMvc.perform(delete("/clients/{id}", nonExistingId).accept(MediaType.APPLICATION_JSON));
+				mockMvc.perform(delete("/clients/{id}", nonExistingId)
+						.accept(MediaType.APPLICATION_JSON));
 
 		result.andExpect(status().isNotFound());
 	}
